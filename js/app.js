@@ -430,8 +430,11 @@
 
   /* =========================== BOOT ===================================== */
   async function boot() {
-    const session = await UI.guard();
-    if (!session) return;
+    /* PUBLIC PAGE — the homepage shows services, prices, calculator and
+       shades to every visitor. Sign-in is only required for dashboard.html
+       (My Glam Space), which keeps its own UI.guard(). This does NOT touch
+       the database: it only skips the redirect for guests. */
+    try { if (!DB.getSession()) await DB.init(); } catch (e) {}
 
     await mergeRemoteCatalog();
 
